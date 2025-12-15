@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Conversation } from '../types';
-import { CURRENT_USER } from '../constants';
+import { CURRENT_USER, MOCK_CANNED_RESPONSES } from '../constants';
 import { EmojiPicker } from './EmojiPicker';
 
 interface ChatWindowProps {
@@ -20,6 +20,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showCannedMenu, setShowCannedMenu] = useState(false);
   
   const timerRef = useRef<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -32,6 +33,15 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
       }
     };
   }, []);
+
+  // Handle slash command detection
+  useEffect(() => {
+    if (inputText.startsWith('/')) {
+      setShowCannedMenu(true);
+    } else {
+      setShowCannedMenu(false);
+    }
+  }, [inputText]);
 
   const startRecording = () => {
     setIsRecording(true);
@@ -73,6 +83,18 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
     // Optionally close picker or keep open for multiple selections
     // setShowEmojiPicker(false); 
   };
+
+  const handleCannedResponseSelect = (content: string) => {
+    setInputText(content);
+    setShowCannedMenu(false);
+  };
+
+  const filteredCannedResponses = useMemo(() => {
+    const searchTerm = inputText.slice(1).toLowerCase();
+    return MOCK_CANNED_RESPONSES.filter(
+      r => r.shortcut.toLowerCase().includes(searchTerm) || r.content.toLowerCase().includes(searchTerm)
+    );
+  }, [inputText]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -203,6 +225,35 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
         />
         {!isRecording ? (
           <>
+            {/* Canned Responses Menu */}
+            {showCannedMenu && (
+               <div className="absolute bottom-full left-4 right-4 mb-2 bg-white rounded-lg shadow-2xl border border-gray-200 overflow-hidden z-50 animate-[fadeIn_0.1s_ease-out] max-h-[300px] flex flex-col">
+                 <div className="bg-gray-50 px-3 py-2 border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                   Respostas Prontas
+                 </div>
+                 <div className="overflow-y-auto scrollbar-thin">
+                   {filteredCannedResponses.length > 0 ? (
+                     filteredCannedResponses.map((response) => (
+                       <button
+                         key={response.id}
+                         onClick={() => handleCannedResponseSelect(response.content)}
+                         className="w-full text-left px-4 py-3 hover:bg-gray-50 border-b border-gray-50 last:border-0 transition-colors group"
+                       >
+                         <div className="flex flex-col gap-0.5">
+                            <span className="font-semibold text-gray-800 text-sm">{response.shortcut}</span>
+                            <span className="text-xs text-gray-500 line-clamp-1">{response.content}</span>
+                         </div>
+                       </button>
+                     ))
+                   ) : (
+                     <div className="px-4 py-3 text-sm text-gray-400 italic">
+                        Nenhuma resposta encontrada para "{inputText.slice(1)}"
+                     </div>
+                   )}
+                 </div>
+               </div>
+            )}
+
             {/* Emoji Picker Popover */}
             {showEmojiPicker && (
               <>
@@ -223,8 +274,9 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 className="w-full border-none focus:ring-0 p-0 text-sm text-gray-800 resize-none h-12 placeholder-gray-400 outline-none"
-                placeholder="Shift + enter para nova linha..."
+                placeholder={showCannedMenu ? "Filtrar respostas prontas..." : "Shift + enter para nova linha. Digite '/' para selecionar uma Resposta Pronta."}
               />
+              {/* Slash Command Hint (optional visual cue if needed, currently placeholder handles it) */}
             </div>
 
             <div className="flex items-center justify-between mt-2 pt-2 gap-2">

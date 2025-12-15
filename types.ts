@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type ViewType = 'chat' | 'labels';
+export type ViewType = 'chat' | 'labels' | 'responses' | 'integrations' | 'webhooks' | 'apps' | 'openai' | 'dialogflow' | 'google-translate' | 'dyte' | 'profile';
 
 export interface User {
   id: string;
@@ -17,6 +17,18 @@ export interface Label {
   description?: string;
   color: string; // Hex code
   showInSidebar?: boolean;
+}
+
+export interface CannedResponse {
+  id: string;
+  shortcut: string;
+  content: string;
+}
+
+export interface Webhook {
+  id: string;
+  url: string;
+  events: string[];
 }
 
 export interface Message {

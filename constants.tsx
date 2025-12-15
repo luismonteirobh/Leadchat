@@ -1,5 +1,5 @@
 import React from 'react';
-import { Conversation, User, Label } from './types';
+import { Conversation, User, Label, CannedResponse, Webhook } from './types';
 
 export const CURRENT_USER: User = {
   id: 'me',
@@ -16,6 +16,42 @@ export const LABELS: Label[] = [
   { id: '5', name: 'pago', description: 'aguardando contrato', color: '#F4BD43', showInSidebar: true },
   { id: '6', name: 'r1', description: 'para remarketing envio de promoções', color: '#A8B7D0', showInSidebar: true },
   { id: '7', name: 'r2', description: 'para remarketing envio de promoções', color: '#E4F9E5', showInSidebar: false },
+];
+
+export const MOCK_CANNED_RESPONSES: CannedResponse[] = [
+  { 
+    id: '1', 
+    shortcut: '1 - CIDADE?', 
+    content: 'de qual cidade vocês estão falando hoje?' 
+  },
+  { 
+    id: '2', 
+    shortcut: '1 - SAUDAÇÃO', 
+    content: 'Olá! Sou **Caio Bognin** 🤩 Consultor(a) credenciado(a) do **Passaporte Anual do Vale das Águas Thermas Park**! Estou aqui pra te ajudar a garantir a melhor experiência pelo melhor valor possível! 🌊✨ Você já conheciam o **Vale das Águas Thermas Park** ou será a primeira vez por aqui? 😉' 
+  },
+  { 
+    id: '3', 
+    shortcut: '1 Cibelly Saudação', 
+    content: 'Olá! Sou ***Cibelly Borges*** 🤩 Consultora credenciado(a) do **Passaporte Anual do Vale das Águas Thermas Park**! Estou aqui pra te ajudar a garantir a melhor experiência pelo melhor valor possível! 🌊✨' 
+  },
+  { 
+    id: '4', 
+    shortcut: '2 - FOTOS E VIDEOS', 
+    content: 'Vou te enviar rapidinho **um vídeo e algumas fotos** da estrutura 😻 E na sequência já te passo os valores e como funciona o Passaporte Vale das Águas.' 
+  },
+  { 
+    id: '5', 
+    shortcut: '3 - APRESENTAÇÃO', 
+    content: 'Olha que incrível! O **Vale das Águas Thermas Park**, pertinho de Piracicaba, é um dos parques aquáticos mais completos da região! 🌊💙 Tem piscinas aquecidas, áreas infantis, toboáguas, cascatas, espaços de descanso e diversos ambientes pra família toda aproveitar! 🎢 🌞' 
+  },
+];
+
+export const MOCK_WEBHOOKS: Webhook[] = [
+  {
+    id: '1',
+    url: 'https://webhook.evoluatrips.com/webhook/chatwoot-webhook',
+    events: ['conversation_created']
+  }
 ];
 
 export const MOCK_CONVERSATIONS: Conversation[] = [

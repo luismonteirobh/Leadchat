@@ -4,6 +4,15 @@ import { ConversationList } from './components/ConversationList';
 import { ChatWindow } from './components/ChatWindow';
 import { ContactSidebar } from './components/ContactSidebar';
 import { LabelsPage } from './components/LabelsPage';
+import { ResponsesPage } from './components/ResponsesPage';
+import { IntegrationsPage } from './components/IntegrationsPage';
+import { WebhooksPage } from './components/WebhooksPage';
+import { AppsPage } from './components/AppsPage';
+import { OpenAIPage } from './components/OpenAIPage';
+import { DialogflowPage } from './components/DialogflowPage';
+import { GoogleTranslatePage } from './components/GoogleTranslatePage';
+import { DytePage } from './components/DytePage';
+import { ProfileSettingsPage } from './components/ProfileSettingsPage';
 import { MOCK_CONVERSATIONS } from './constants';
 import { TabType, ViewType } from './types';
 
@@ -32,12 +41,14 @@ function App() {
     setIsMobileMenuOpen(false);
   };
 
+  const isIntegrationView = ['webhooks', 'apps', 'openai', 'dialogflow', 'google-translate', 'dyte'].includes(currentView);
+
   return (
     <div className="flex h-screen w-full bg-white overflow-hidden relative">
       <Sidebar 
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
-        activeView={currentView}
+        activeView={isIntegrationView ? 'integrations' : currentView}
         onNavigate={handleNavigate}
       />
       
@@ -81,7 +92,7 @@ function App() {
           )}
         </>
       ) : (
-        /* Settings / Labels View */
+        /* Settings / Labels / Responses / Integrations / Profile Views */
         <div className="flex-1 h-full w-full overflow-hidden">
            {/* Hamburger for mobile in settings view */}
            <div className="md:hidden h-14 flex items-center px-4 border-b border-gray-200">
@@ -95,6 +106,15 @@ function App() {
            </div>
            
            {currentView === 'labels' && <LabelsPage />}
+           {currentView === 'responses' && <ResponsesPage />}
+           {currentView === 'integrations' && <IntegrationsPage onNavigate={handleNavigate} />}
+           {currentView === 'webhooks' && <WebhooksPage onBack={() => handleNavigate('integrations')} />}
+           {currentView === 'apps' && <AppsPage onBack={() => handleNavigate('integrations')} />}
+           {currentView === 'openai' && <OpenAIPage onBack={() => handleNavigate('integrations')} />}
+           {currentView === 'dialogflow' && <DialogflowPage onBack={() => handleNavigate('integrations')} />}
+           {currentView === 'google-translate' && <GoogleTranslatePage onBack={() => handleNavigate('integrations')} />}
+           {currentView === 'dyte' && <DytePage onBack={() => handleNavigate('integrations')} />}
+           {currentView === 'profile' && <ProfileSettingsPage />}
         </div>
       )}
     </div>
