@@ -1,0 +1,7 @@
+{
+  "name": "CM Parques CRM",
+  "description": "A comprehensive customer relationship management dashboard featuring real-time chat, conversation tracking, and team assignment workflows.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
