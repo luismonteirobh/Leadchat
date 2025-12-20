@@ -14,22 +14,24 @@ import { GoogleTranslatePage } from './components/GoogleTranslatePage';
 import { DytePage } from './components/DytePage';
 import { ProfileSettingsPage } from './components/ProfileSettingsPage';
 import { MOCK_CONVERSATIONS } from './constants';
-import { TabType, ViewType } from './types';
+import { TabType, ViewType, Conversation } from './types';
 
 function App() {
   const [currentView, setCurrentView] = useState<ViewType>('chat');
+  const [conversations, setConversations] = useState<Conversation[]>(MOCK_CONVERSATIONS);
   const [activeConversationId, setActiveConversationId] = useState<string | null>('2');
   const [activeTab, setActiveTab] = useState<TabType>(TabType.ALL);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isContactInfoOpen, setIsContactInfoOpen] = useState(true);
 
-  const activeConversation = MOCK_CONVERSATIONS.find(c => c.id === activeConversationId);
-
-  // Filter logic (simple simulation)
-  const filteredConversations = MOCK_CONVERSATIONS; 
+  const activeConversation = conversations.find(c => c.id === activeConversationId);
 
   const handleSelectConversation = (id: string) => {
     setActiveConversationId(id);
+    // Mark as read when selected
+    setConversations(prev => prev.map(conv => 
+      conv.id === id ? { ...conv, unreadCount: 0 } : conv
+    ));
   };
 
   const handleBackToMenu = () => {
@@ -60,7 +62,7 @@ function App() {
             ${activeConversationId ? 'hidden md:flex' : 'flex'}
           `}>
             <ConversationList 
-              conversations={filteredConversations}
+              conversations={conversations}
               activeConversationId={activeConversationId}
               onSelectConversation={handleSelectConversation}
               activeTab={activeTab}
